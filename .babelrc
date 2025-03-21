@@ -1,0 +1,20 @@
+{
+  "presets": [
+    ["next/babel", {
+      "preset-env": {
+        "targets": {
+          "browsers": [">0.3%", "not dead", "not op_mini all"]
+        }
+      }
+    }],
+    ["@babel/preset-env", {
+      "targets": {
+        "node": "current"
+      }
+    }]
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-private-methods",
+    "@babel/plugin-proposal-class-properties"
+  ]
+} 
