@@ -1,14 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { Metadata } from 'next';
 import AuthLayout from '@/components/auth/AuthLayout';
 import ResetPasswordForm from '@/components/auth/ResetPasswordForm';
-
-export const metadata: Metadata = {
-  title: 'Reset Password',
-  description: 'Create a new password for your account',
-};
 
 export default function ResetPasswordPage() {
   const searchParams = useSearchParams();
