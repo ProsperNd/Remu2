@@ -12,7 +12,8 @@ const nextConfig = {
         'firebase-admin',
         '@prisma/client',
         'prisma',
-        'chart.js'
+        'chart.js',
+        'undici'
       ];
     }
 
@@ -22,6 +23,9 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        dns: false,
+        http2: false,
+        'undici': false,
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
         url: require.resolve('url'),
@@ -35,6 +39,19 @@ const nextConfig = {
         'firebase-admin': false,
         canvas: false
       };
+
+      // Add module rules for specific file types
+      config.module.rules.push({
+        test: /node_modules\/undici\/.*\.js$/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
+          plugins: [
+            '@babel/plugin-proposal-private-methods',
+            '@babel/plugin-proposal-class-properties'
+          ]
+        }
+      });
     }
 
     return config;
@@ -46,7 +63,8 @@ const nextConfig = {
     'react-hot-toast',
     'framer-motion',
     'chart.js',
-    'react-chartjs-2'
+    'react-chartjs-2',
+    'undici'
   ],
   experimental: {
     // Enable modern build optimizations
