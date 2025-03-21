@@ -1,11 +1,7 @@
-import { Metadata } from 'next';
+'use client';
+
 import SignInForm from '@/components/auth/SignInForm';
 import AuthLayout from '@/components/auth/AuthLayout';
-
-export const metadata: Metadata = {
-  title: 'Sign In - Remu',
-  description: 'Sign in to your Remu account',
-};
 
 export default function SignInPage() {
   return (

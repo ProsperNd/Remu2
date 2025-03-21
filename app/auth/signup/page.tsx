@@ -1,11 +1,7 @@
-import { Metadata } from 'next';
+'use client';
+
 import SignUpForm from '@/components/auth/SignUpForm';
 import AuthLayout from '@/components/auth/AuthLayout';
-
-export const metadata: Metadata = {
-  title: 'Sign Up - Remu',
-  description: 'Create your account on Remu',
-};
 
 export default function SignUpPage() {
   return (
