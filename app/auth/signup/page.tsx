@@ -3,8 +3,8 @@ import SignUpForm from '@/components/auth/SignUpForm';
 import AuthLayout from '@/components/auth/AuthLayout';
 
 export const metadata: Metadata = {
-  title: 'Sign Up - Remu2',
-  description: 'Create your account on Remu2',
+  title: 'Sign Up - Remu',
+  description: 'Create your account on Remu',
 };
 
 export default function SignUpPage() {
@@ -16,7 +16,7 @@ export default function SignUpPage() {
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}
-          <a href="/auth/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <a href="/auth/login" className="font-medium text-orange-600 hover:text-orange-500">
             sign in to your existing account
           </a>
         </p>
