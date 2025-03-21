@@ -1,9 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/lib/services/productService';
 import { useCart } from '@/lib/context/CartContext';
 import { StarIcon } from '@heroicons/react/20/solid';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
+import { HeartIcon } from '@heroicons/react/24/outline';
+import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
+import { useState } from 'react';
 
 interface ProductCardProps {
   product: Product;
@@ -11,6 +16,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const [isWishlist, setIsWishlist] = useState(false);
   
   const handleAddToCart = () => {
     addToCart({
@@ -21,78 +27,66 @@ export default function ProductCard({ product }: ProductCardProps) {
     });
   };
   
+  const toggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsWishlist(!isWishlist);
+  };
+  
   // Calculate discount percentage if on sale
   const discountPercentage = product.isOnSale && product.salePrice 
     ? Math.round(((product.price - product.salePrice) / product.price) * 100) 
     : 0;
 
   return (
-    <div className="group relative">
-      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-        <Link href={`/products/${product.id}`}>
-          {product.images && product.images.length > 0 ? (
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-              width={500}
-              height={500}
-            />
+    <Link href={`/products/${product.id}`} className="group relative">
+      <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-100">
+        <Image
+          src={product.images[0] || '/placeholder.jpg'}
+          alt={product.name}
+          className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+          width={300}
+          height={300}
+        />
+        <button
+          onClick={toggleWishlist}
+          className="absolute right-2 top-2 rounded-full bg-white p-1.5 shadow-sm transition-colors hover:bg-gray-100"
+        >
+          {isWishlist ? (
+            <HeartSolidIcon className="h-5 w-5 text-red-500" />
           ) : (
-            <div className="h-full w-full flex items-center justify-center bg-gray-100">
-              <span className="text-gray-400">No image</span>
-            </div>
+            <HeartIcon className="h-5 w-5 text-gray-400" />
           )}
-        </Link>
-        
-        {product.isNew && (
-          <div className="absolute top-2 left-2 bg-primary-600 text-white text-xs font-semibold px-2 py-1 rounded">
-            NEW
-          </div>
-        )}
-        
-        {product.isOnSale && product.salePrice && (
-          <div className="absolute top-2 right-2 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
+        </button>
+        {discountPercentage > 0 && (
+          <div className="absolute left-2 top-2 rounded-full bg-red-500 px-2 py-1 text-xs font-medium text-white">
             -{discountPercentage}%
           </div>
         )}
       </div>
       
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
-            <Link href={`/products/${product.id}`}>
-              <span aria-hidden="true" className="absolute inset-0" />
-              {product.name}
-            </Link>
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">{product.category}</p>
-          
-          {/* Ratings */}
-          <div className="mt-1 flex items-center">
-            {[0, 1, 2, 3, 4].map((rating) => (
-              <StarIcon
-                key={rating}
-                className={`${
-                  product.ratings > rating ? 'text-yellow-400' : 'text-gray-200'
-                } h-4 w-4 flex-shrink-0`}
-                aria-hidden="true"
-              />
-            ))}
-            <p className="ml-1 text-xs text-gray-500">({product.reviewCount})</p>
-          </div>
-        </div>
+      <div className="mt-4 space-y-1">
+        <h3 className="text-sm font-medium text-gray-900 line-clamp-2">
+          {product.name}
+        </h3>
+        <p className="text-sm text-gray-500 line-clamp-1">
+          {product.category}
+        </p>
         
-        <div className="text-right">
-          <div className="text-sm font-medium text-gray-900">
-            {product.isOnSale && product.salePrice ? (
-              <>
-                <span className="text-red-600">${product.salePrice.toFixed(2)}</span>
-                <span className="ml-1 line-through text-gray-500 text-xs">${product.price.toFixed(2)}</span>
-              </>
-            ) : (
-              `$${product.price.toFixed(2)}`
-            )}
+        {/* Ratings */}
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm font-medium text-gray-900">
+                {product.isOnSale && product.salePrice ? (
+                  <>
+                    <span className="text-red-600">${product.salePrice.toFixed(2)}</span>
+                    <span className="ml-1 line-through text-gray-500 text-xs">${product.price.toFixed(2)}</span>
+                  </>
+                ) : (
+                  `$${product.price.toFixed(2)}`
+                )}
+              </span>
+            </div>
           </div>
           
           {product.shippingTime && (
@@ -109,6 +103,6 @@ export default function ProductCard({ product }: ProductCardProps) {
         <ShoppingCartIcon className="h-4 w-4 mr-2" />
         Add to Cart
       </button>
-    </div>
+    </Link>
   );
 } 

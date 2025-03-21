@@ -1,62 +1,35 @@
 import { NextResponse } from 'next/server';
-import { getProducts, ProductFilter } from '@/lib/services/productService';
+import { getProducts } from '@/lib/services/productService';
 
-// GET handler for retrieving products with filtering
+// GET handler for retrieving products with filtering and pagination
 export async function GET(request: Request) {
   try {
-    // Get search params from the request URL
     const { searchParams } = new URL(request.url);
     
-    // Build filter object from search params
-    const filter: ProductFilter = {};
-    
-    // Category filter
-    const category = searchParams.get('category');
-    if (category) {
-      filter.categories = [category];
-    }
-    
-    // Search query
-    const searchQuery = searchParams.get('search');
-    if (searchQuery) {
-      filter.searchQuery = searchQuery;
-    }
-    
-    // Price range
-    const minPrice = searchParams.get('minPrice');
-    const maxPrice = searchParams.get('maxPrice');
-    if (minPrice || maxPrice) {
-      filter.priceRange = {};
-      if (minPrice) filter.priceRange.min = Number(minPrice);
-      if (maxPrice) filter.priceRange.max = Number(maxPrice);
-    }
-    
-    // On sale filter
-    const onSale = searchParams.get('onSale');
-    if (onSale === 'true') {
-      filter.onSale = true;
-    }
-    
-    // In stock filter
-    const inStock = searchParams.get('inStock');
-    if (inStock === 'true') {
-      filter.inStock = true;
-    }
-    
-    // Sort by
-    const sortBy = searchParams.get('sortBy') as ProductFilter['sortBy'];
-    if (sortBy) {
-      filter.sortBy = sortBy;
-    }
-    
-    // Get products based on filter
+    const filter = {
+      categories: searchParams.get('categories')?.split(','),
+      searchQuery: searchParams.get('search') || undefined,
+      priceRange: {
+        min: searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : undefined,
+        max: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
+      },
+      onSale: searchParams.get('onSale') === 'true',
+      inStock: searchParams.get('inStock') === 'true',
+      sortBy: searchParams.get('sortBy') as any,
+      page: searchParams.get('page') ? Number(searchParams.get('page')) : 1,
+      limit: searchParams.get('limit') ? Number(searchParams.get('limit')) : 20,
+    };
+
     const products = await getProducts(filter);
     
-    return NextResponse.json(products);
+    return NextResponse.json({
+      success: true,
+      data: products,
+    });
   } catch (error) {
     console.error('Error fetching products:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch products' },
+      { success: false, error: 'Failed to fetch products' },
       { status: 500 }
     );
   }
