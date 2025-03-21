@@ -3,10 +3,17 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['res.cloudinary.com', 'images.unsplash.com', 'placehold.co'],
+    unoptimized: true
   },
   webpack: (config, { isServer }) => {
     // Add external dependencies that need special handling
-    config.externals = [...(config.externals || []), 'firebase-admin'];
+    if (isServer) {
+      config.externals = [...(config.externals || []), 
+        'firebase-admin',
+        '@prisma/client',
+        'prisma'
+      ];
+    }
 
     // Handle specific packages that might cause issues
     if (!isServer) {
@@ -15,6 +22,8 @@ const nextConfig = {
         fs: false,
         net: false,
         tls: false,
+        dns: false,
+        child_process: false,
         crypto: require.resolve('crypto-browserify'),
         stream: require.resolve('stream-browserify'),
         url: require.resolve('url/'),
