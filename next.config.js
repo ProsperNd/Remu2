@@ -11,7 +11,8 @@ const nextConfig = {
       config.externals = [...(config.externals || []), 
         'firebase-admin',
         '@prisma/client',
-        'prisma'
+        'prisma',
+        'chart.js'
       ];
     }
 
@@ -31,7 +32,8 @@ const nextConfig = {
         os: require.resolve('os-browserify'),
         path: require.resolve('path-browserify'),
         'process/browser': require.resolve('process/browser'),
-        'firebase-admin': false
+        'firebase-admin': false,
+        canvas: false
       };
     }
 
@@ -42,7 +44,9 @@ const nextConfig = {
     '@heroicons/react',
     '@headlessui/react',
     'react-hot-toast',
-    'framer-motion'
+    'framer-motion',
+    'chart.js',
+    'react-chartjs-2'
   ],
   experimental: {
     // Enable modern build optimizations
@@ -52,7 +56,8 @@ const nextConfig = {
       '@headlessui/react',
       'react-icons',
       'date-fns',
-      'lodash'
+      'lodash',
+      'chart.js'
     ]
   }
 }

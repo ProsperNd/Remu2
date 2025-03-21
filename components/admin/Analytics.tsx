@@ -1,29 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-} from 'chart.js';
-import { Line, Bar } from 'react-chartjs-2';
+import dynamic from 'next/dynamic';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+// Dynamically import chart components with no SSR
+const Chart = dynamic(() => import('chart.js/auto').then((mod) => mod.Chart), {
+  ssr: false,
+});
+
+const Line = dynamic(() => import('react-chartjs-2').then((mod) => mod.Line), {
+  ssr: false,
+});
+
+const Bar = dynamic(() => import('react-chartjs-2').then((mod) => mod.Bar), {
+  ssr: false,
+});
 
 interface AnalyticsData {
   revenue: {
@@ -43,6 +34,28 @@ interface AnalyticsData {
 export default function Analytics() {
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [chartInitialized, setChartInitialized] = useState(false);
+
+  useEffect(() => {
+    const initChart = async () => {
+      const { Chart: ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } = await import('chart.js');
+      
+      ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        BarElement,
+        Title,
+        Tooltip,
+        Legend
+      );
+      
+      setChartInitialized(true);
+    };
+
+    initChart();
+  }, []);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -59,10 +72,12 @@ export default function Analytics() {
       }
     };
 
-    fetchAnalytics();
-  }, []);
+    if (chartInitialized) {
+      fetchAnalytics();
+    }
+  }, [chartInitialized]);
 
-  if (loading || !data) {
+  if (loading || !data || !chartInitialized) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
@@ -70,15 +85,11 @@ export default function Analytics() {
     );
   }
 
-  const revenueOptions = {
+  const chartOptions = {
     responsive: true,
     plugins: {
       legend: {
         position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Revenue Over Time',
       },
     },
   };
@@ -107,19 +118,6 @@ export default function Analytics() {
     ],
   };
 
-  const topProductsOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: true,
-        text: 'Top Selling Products',
-      },
-    },
-  };
-
   const topProductsData = {
     labels: data.topProducts.labels,
     datasets: [
@@ -135,14 +133,14 @@ export default function Analytics() {
     <div className="space-y-8">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <Line options={revenueOptions} data={revenueData} />
+          <Line options={chartOptions} data={revenueData} />
         </div>
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <Line options={revenueOptions} data={ordersData} />
+          <Line options={chartOptions} data={ordersData} />
         </div>
       </div>
       <div className="bg-white p-6 rounded-lg shadow-sm">
-        <Bar options={topProductsOptions} data={topProductsData} />
+        <Bar options={chartOptions} data={topProductsData} />
       </div>
     </div>
   );
