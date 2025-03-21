@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "stripe:listen": "stripe listen --forward-to http://localhost:3000/api/webhook",
+    "seed": "ts-node --project tsconfig.json scripts/seed.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.17",
@@ -19,12 +24,14 @@
     "cloudinary": "^1.41.0",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
+    "firebase": "^10.7.0",
     "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
     "next": "13.5.4",
     "next-auth": "^4.23.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.46.2",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^4.11.0",

@@ -1,6 +1,10 @@
 import './globals.css';
 import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
+import { AuthProvider } from '@/lib/context/AuthContext';
+import { CartProvider } from '@/lib/context/CartContext';
+import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -21,8 +25,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body className="min-h-screen bg-gray-50">
-        <Toaster position="top-center" />
-        {children}
+        <AuthProvider>
+          <CartProvider>
+            <Toaster position="top-center" />
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

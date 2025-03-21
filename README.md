@@ -1,59 +1,108 @@
-# Remu2 - Temu-like Shopping App
+# Remu2 - E-commerce Platform
 
-A Next.js-based shopping application with features similar to Temu, including user authentication (sign-in/sign-up), product browsing, shopping cart, and an admin dashboard for product management.
+Remu2 is a modern e-commerce platform inspired by Temu, built with Next.js, Firebase, and Stripe.
 
-## Features
+## Prerequisites
 
-- **User Authentication**
-  - Sign up / Sign in functionality
-  - Profile management
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (LTS version recommended)
+- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [Firebase](https://firebase.google.com/) account
+- [Stripe](https://stripe.com/) account (optional, for payment processing)
 
-- **Shopping Experience**
-  - Browse products by categories
-  - Search functionality
-  - Product details view
-  - Cart and checkout
-  - Order history
+## Installation
 
-- **Admin Dashboard**
-  - Product management (add, edit, delete)
-  - Order management
-  - User management
-  - Analytics
-
-## Project Structure
-
-```
-remu2/
-├── app/                    # Next.js App Router
-│   ├── api/                # API Routes
-│   ├── admin/              # Admin Dashboard Pages
-│   ├── auth/               # Authentication Pages
-│   ├── products/           # Product Pages
-│   ├── cart/               # Shopping Cart
-│   └── page.tsx            # Homepage
-├── components/             # Reusable UI components
-├── lib/                    # Utility functions, hooks, etc.
-├── models/                 # Data models/types
-├── public/                 # Static assets
-└── styles/                 # Global styles
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd remu2
 ```
 
-## Setup Instructions
+2. Install dependencies:
+```bash
+npm install
+```
 
-1. Ensure Node.js is installed on your machine (v16+ recommended)
-2. Clone this repository
-3. Run `npm install` to install dependencies
-4. Run `npm run dev` to start the development server
+3. Set up environment variables:
+   - Copy `.env.local.example` to `.env.local`
+   - Fill in the required environment variables with your Firebase and Stripe credentials
 
-## Backend
+## Configuration
 
-This project uses:
-- Next.js API Routes for backend services
-- Prisma ORM for database interactions
-- NextAuth.js for authentication
-- Cloudinary for image storage
+### Firebase Setup
 
-## Development Status
+1. Create a new Firebase project at [https://console.firebase.google.com/](https://console.firebase.google.com/)
+2. Enable Authentication, Firestore, and Storage services
+3. Create a web app in your Firebase project
+4. Copy the Firebase configuration to your `.env.local` file
 
-This project is currently under development.
+### Stripe Setup (Optional)
+
+1. Create a Stripe account at [https://stripe.com/](https://stripe.com/)
+2. Get your API keys from the Stripe Dashboard
+3. Add them to your `.env.local` file
+4. For webhook testing, install the Stripe CLI and run:
+```bash
+npm run stripe:listen
+```
+
+## Backend Structure
+
+The backend is built using Next.js API routes and Firebase services:
+
+- `/app/api/products`: Product API endpoints
+- `/app/api/cart`: Shopping cart API endpoints
+- `/app/api/orders`: Order management API endpoints
+- `/app/api/checkout`: Payment processing with Stripe
+- `/app/api/webhook`: Stripe webhook handler
+
+## Development
+
+To start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at [http://localhost:3000](http://localhost:3000).
+
+## Firebase Data Structure
+
+### Collections
+
+- `users`: User accounts and profiles
+- `products`: Product information
+- `carts`: Shopping carts for users
+- `orders`: Order information
+
+## API Endpoints
+
+### Products
+
+- `GET /api/products`: Get all products with optional filtering
+- `GET /api/products/[id]`: Get a single product by ID
+
+### Cart
+
+- `GET /api/cart`: Get the cart for the authenticated user
+- `POST /api/cart`: Update the cart for the authenticated user
+
+### Orders
+
+- `GET /api/orders`: Get all orders for the authenticated user
+- `POST /api/orders`: Create a new order
+
+### Checkout
+
+- `POST /api/checkout`: Create a Stripe checkout session for payment processing
+
+## Deployment
+
+This application can be deployed using Vercel or any other Next.js-compatible hosting platform.
+
+1. Set up environment variables in your hosting platform
+2. Deploy the application
+
+## License
+
+[MIT](LICENSE)
