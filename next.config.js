@@ -5,6 +5,11 @@ const nextConfig = {
     domains: ['res.cloudinary.com', 'images.unsplash.com', 'placehold.co', 'firebasestorage.googleapis.com', 'localhost'],
     unoptimized: true
   },
+  // Configure SWC for font optimization
+  compiler: {
+    // Disable SWC minification since we're using Babel
+    swcMinify: false,
+  },
   webpack: (config, { isServer }) => {
     // Add external dependencies that need special handling
     if (isServer) {
@@ -56,7 +61,7 @@ const nextConfig = {
 
     return config;
   },
-  // Transpile specific modules
+  // Transpile specific packages
   transpilePackages: [
     '@heroicons/react',
     '@headlessui/react',
@@ -76,6 +81,10 @@ const nextConfig = {
       'date-fns',
       'lodash',
       'chart.js'
+    ],
+    // Enable font optimization
+    fontLoaders: [
+      { loader: '@next/font/google', options: { subsets: ['latin'] } }
     ]
   }
 }
