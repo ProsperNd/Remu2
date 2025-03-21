@@ -1,6 +1,6 @@
 # Remu2 - Temu-like Shopping App
 
-A Flutter-based shopping application with features similar to Temu, including user authentication (sign-in/sign-up), product browsing, shopping cart, and an admin dashboard for product management.
+A Next.js-based shopping application with features similar to Temu, including user authentication (sign-in/sign-up), product browsing, shopping cart, and an admin dashboard for product management.
 
 ## Features
 
@@ -25,30 +25,34 @@ A Flutter-based shopping application with features similar to Temu, including us
 
 ```
 remu2/
-├── lib/                    # Main source code
-│   ├── models/             # Data models
-│   ├── screens/            # UI screens
-│   ├── widgets/            # Reusable UI components
-│   ├── services/           # Backend services
-│   ├── utils/              # Utility functions and constants
-│   └── main.dart           # Entry point
-├── assets/                 # Images, fonts, etc.
-└── test/                   # Test files
+├── app/                    # Next.js App Router
+│   ├── api/                # API Routes
+│   ├── admin/              # Admin Dashboard Pages
+│   ├── auth/               # Authentication Pages
+│   ├── products/           # Product Pages
+│   ├── cart/               # Shopping Cart
+│   └── page.tsx            # Homepage
+├── components/             # Reusable UI components
+├── lib/                    # Utility functions, hooks, etc.
+├── models/                 # Data models/types
+├── public/                 # Static assets
+└── styles/                 # Global styles
 ```
 
 ## Setup Instructions
 
-1. Ensure Flutter is installed on your machine
+1. Ensure Node.js is installed on your machine (v16+ recommended)
 2. Clone this repository
-3. Run `flutter pub get` to install dependencies
-4. Run `flutter run` to start the application
+3. Run `npm install` to install dependencies
+4. Run `npm run dev` to start the development server
 
 ## Backend
 
-This project uses Firebase for backend services:
-- Firebase Authentication for user management
-- Cloud Firestore for database
-- Firebase Storage for image storage
+This project uses:
+- Next.js API Routes for backend services
+- Prisma ORM for database interactions
+- NextAuth.js for authentication
+- Cloudinary for image storage
 
 ## Development Status
 
